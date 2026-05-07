@@ -11,9 +11,11 @@
     "dev": "turbo run dev --parallel",
     "dev:api": "turbo run dev --filter=@spendgate/api",
     "dev:mobile": "turbo run dev --filter=@spendgate/mobile",
+    "dev:web": "turbo run dev --filter=@spendgate/web",
     "build": "turbo run build",
     "build:api": "turbo run build --filter=@spendgate/api",
     "build:mobile": "turbo run build --filter=@spendgate/mobile",
+    "build:web": "turbo run build --filter=@spendgate/web",
     "lint": "turbo run lint",
     "lint:api": "turbo run lint --filter=@spendgate/api",
     "lint:mobile": "turbo run lint --filter=@spendgate/mobile",
@@ -22,6 +24,6 @@
     "check": "npm run format:check && npm run lint"
   },
   "devDependencies": {
-    "turbo": "^1.13.4"
+    "turbo": "^2.9.9"
   }
 }
