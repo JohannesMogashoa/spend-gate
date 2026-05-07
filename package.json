@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "name": "spendgate-monorepo",
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "dev:api": "turbo run dev --filter=@spendgate/api",
+    "dev:mobile": "turbo run dev --filter=@spendgate/mobile",
+    "build": "turbo run build",
+    "build:api": "turbo run build --filter=@spendgate/api",
+    "build:mobile": "turbo run build --filter=@spendgate/mobile",
+    "lint": "turbo run lint",
+    "lint:api": "turbo run lint --filter=@spendgate/api",
+    "lint:mobile": "turbo run lint --filter=@spendgate/mobile",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run format:check && npm run lint"
+  },
+  "devDependencies": {
+    "turbo": "^1.13.4"
+  }
+}
