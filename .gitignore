@@ -21,3 +21,4 @@ sg-mobile/.expo-shared/
 sg-mobile/build/
 coverage/
 docs/
+.turbo
