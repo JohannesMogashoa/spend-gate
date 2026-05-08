@@ -24,6 +24,6 @@
     "check": "npm run format:check && npm run lint"
   },
   "devDependencies": {
-    "turbo": "^2.9.9"
+    "turbo": "^2.9.10"
   }
 }

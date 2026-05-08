@@ -1,30 +1,22 @@
 {
-  "$schema": "./node_modules/turbo/schema.json",
-  "tasks": {
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".next/**",
-        "build/**",
-        "dist/**"
-      ]
-    },
-    "check-types": {
-      "dependsOn": [
-        "^check-types"
-      ]
-    },
-    "lint": {
-      "outputs": []
-    },
-    "format": {
-      "outputs": []
+    "$schema": "./node_modules/turbo/schema.json",
+    "tasks": {
+        "dev": {
+            "cache": false,
+            "persistent": true
+        },
+        "build": {
+            "dependsOn": ["^build"],
+            "outputs": [".next/**", "!.next/cache/**", "build/**", "dist/**"]
+        },
+        "check-types": {
+            "dependsOn": ["^check-types"]
+        },
+        "lint": {
+            "outputs": []
+        },
+        "format": {
+            "outputs": []
+        }
     }
-  }
 }

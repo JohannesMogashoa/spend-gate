@@ -3,7 +3,7 @@
 import { createContext, type ReactNode, useContext, useState } from "react";
 import { useStore } from "zustand";
 
-import { createRulesStore, type RulesStore } from "@/context/store/rules-store";
+import { createRulesStore, type RulesStore } from "@/store/rules-store";
 
 export type RulesStoreApi = ReturnType<typeof createRulesStore>;
 
