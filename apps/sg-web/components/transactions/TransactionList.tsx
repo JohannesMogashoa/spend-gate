@@ -1,15 +1,7 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { InvestecTransaction } from "@/lib/types";
 import { SuggestionModal } from "@/components/SuggestionModal";
-import type { RuleSuggestion } from "@/lib/rule-suggester";
-import {
-    flexRender,
-    getCoreRowModel,
-    getPaginationRowModel,
-    useReactTable,
-} from "@tanstack/react-table";
 import { getColumns } from "@/components/transactions/columns";
+import { DataTablePagination } from "@/components/ui/DataTablePagination";
 import {
     Table,
     TableBody,
@@ -18,14 +10,21 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "@/components/ui/DataTablePagination";
-import { useRulesStore } from "@/context/providers/rules-store-provider";
+import { useFetchTransactions } from "@/hooks/useTransactions";
+import type { RuleSuggestion } from "@/lib/rule-suggester";
+import { InvestecTransaction } from "@spendgate/rules";
+import {
+    flexRender,
+    getCoreRowModel,
+    getPaginationRowModel,
+    useReactTable,
+} from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
+import { useCallback, useMemo, useState } from "react";
+import { useRulesStore } from "../providers/RulesStoreProvider";
 
 export function TransactionList() {
-    const [transactions, setTransactions] = useState<InvestecTransaction[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { data: transactions, error, isLoading } = useFetchTransactions();
     const [selectedTx, setSelectedTx] = useState<InvestecTransaction | null>(null);
     const setSuggestion = useRulesStore((state) => state.setSuggestion);
     const router = useRouter();
@@ -49,42 +48,20 @@ export function TransactionList() {
 
     const handleSuggestionsLoaded = useCallback(() => {}, []);
 
-    const fetchTransactions = useCallback(async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const res = await fetch("/api/transactions");
-            if (!res.ok) {
-                setError("Failed to fetch transactions");
-                return;
-            }
-
-            const data = (await res.json()) as { transactions?: InvestecTransaction[] };
-            setTransactions(data.transactions ?? []);
-        } catch (e) {
-            setError(e instanceof Error ? e.message : "Unknown error");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
     const columns = useMemo(
         () => getColumns(handleTransactionCreateRule),
         [handleTransactionCreateRule]
     );
 
+    // eslint-disable-next-line react-hooks/incompatible-library
     const table = useReactTable({
-        data: transactions,
+        data: transactions ?? [],
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
     });
 
-    useEffect(() => {
-        fetchTransactions();
-    }, [fetchTransactions]);
-
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-slate-500">
                 Loading transactions...
@@ -96,12 +73,12 @@ export function TransactionList() {
         return (
             <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-red-600">
                 <p className="font-medium">Error loading transactions</p>
-                <p className="text-sm mt-1">{error}</p>
+                <p className="text-sm mt-1">{error.message}</p>
             </div>
         );
     }
 
-    if (!transactions.length) {
+    if (!transactions || transactions.length === 0) {
         return (
             <div className="rounded-xl border border-dashed border-slate-300 py-12 text-center text-slate-400 text-sm">
                 No transactions found for the last 90 days.

@@ -1,6 +1,6 @@
 "use client";
+import { InvestecTransaction } from "@spendgate/rules";
 import { ColumnDef } from "@tanstack/react-table";
-import { InvestecTransaction } from "@/lib/types";
 
 type CreateRuleHandler = (tx: InvestecTransaction) => void;
 

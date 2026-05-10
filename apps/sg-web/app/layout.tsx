@@ -1,10 +1,11 @@
+import Header from "@/components/Header";
 import { ClientProviders } from "@/components/providers/ClientProviders";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 
-const roboto = Roboto({subsets:['latin'],variable:'--font-sans'});
+const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -29,10 +30,20 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", roboto.variable)}
+            className={cn(
+                "h-full",
+                "antialiased",
+                geistSans.variable,
+                geistMono.variable,
+                "font-sans",
+                roboto.variable
+            )}
         >
             <body className="min-h-full flex flex-col">
-                <ClientProviders>{children}</ClientProviders>
+                <ClientProviders>
+                    <Header />
+                    {children}
+                </ClientProviders>
             </body>
         </html>
     );
