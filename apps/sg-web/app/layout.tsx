@@ -1,11 +1,9 @@
 import Header from "@/components/Header";
 import { ClientProviders } from "@/components/providers/ClientProviders";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Roboto } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -19,7 +17,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: "SpendGate",
-    description: "Programmable card rules for your Investec card",
+    description:
+        "Programmable card rules for your Investec card - Take control of your spending with intelligent automation",
+    keywords: ["Investec", "programmable banking", "card rules", "spending control", "fintech"],
+};
+
+export const viewport: Viewport = {
+    themeColor: [
+        { media: "(prefers-color-scheme: light)", color: "#fafafa" },
+        { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    ],
+    width: "device-width",
+    initialScale: 1,
 };
 
 export default function RootLayout({
@@ -30,16 +39,10 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={cn(
-                "h-full",
-                "antialiased",
-                geistSans.variable,
-                geistMono.variable,
-                "font-sans",
-                roboto.variable
-            )}
+            className={cn("h-full bg-background", geistSans.variable, geistMono.variable)}
+            suppressHydrationWarning
         >
-            <body className="min-h-full flex flex-col">
+            <body className="min-h-full flex flex-col font-sans antialiased">
                 <ClientProviders>
                     <Header />
                     {children}

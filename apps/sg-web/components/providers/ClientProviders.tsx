@@ -3,7 +3,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { TooltipProvider } from "../ui/tooltip";
-import { CredentialGuard } from "./CredentialGuard";
 import { RulesStoreProvider } from "./RulesStoreProvider";
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
@@ -11,11 +10,9 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <CredentialGuard>
-                <RulesStoreProvider>
-                    <TooltipProvider>{children}</TooltipProvider>
-                </RulesStoreProvider>
-            </CredentialGuard>
+            <RulesStoreProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+            </RulesStoreProvider>
         </QueryClientProvider>
     );
 }

@@ -1,6 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import type { RuleCondition } from "@spendgate/rules";
 import { boolean, index, integer, json, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 
 export * from "./auth-schema";
 
@@ -24,6 +25,12 @@ export const rules = pgTable(
         userIdIdx: index("rules_user_id_idx").on(table.userId),
     })
 );
+
+export type Rule = typeof rules.$inferSelect;
+export type CreateRule = Omit<typeof rules.$inferInsert, "userId">;
+export const selectRuleSchema = createSelectSchema(rules);
+export const insertRuleSchema = createInsertSchema(rules);
+export const updateRuleSchema = createUpdateSchema(rules);
 
 export const transactionEvents = pgTable(
     "transaction_events",

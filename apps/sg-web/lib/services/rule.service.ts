@@ -1,40 +1,29 @@
-import type { Rule } from "@/db";
-import { db } from "@/db";
-import type { SpendRule } from "@spendgate/rules";
+import { db } from "@/db/client";
+import { CreateRule, Rule, rules } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const ruleService = {
-    async create(rule: Omit<SpendRule, "id" | "triggerCount" | "savedCents">): Promise<string> {
-        const id = crypto.randomUUID();
-        await db.rules.add({
-            id,
-            label: rule.label,
-            active: rule.active,
-            priority: rule.priority,
-            conditions: JSON.stringify(rule.conditions),
-            actions: JSON.stringify(rule.actions),
-            notifyChannel: "push",
-            triggerCount: 0,
-            savedCents: 0,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+    async create(rule: CreateRule & { userId: string }): Promise<void> {
+        await db.insert(rules).values(rule).onConflictDoUpdate({
+            target: rules.id,
+            set: rule,
         });
-        return id;
     },
 
-    async update(id: string, patch: Partial<Omit<Rule, "id">>): Promise<void> {
-        await db.rules.update(id, { ...patch, updatedAt: new Date() });
+    async update(rule: Rule): Promise<void> {
+        await db.update(rules).set(rule).where(eq(rules.id, rule.id));
     },
 
     async delete(id: string): Promise<void> {
-        await db.rules.delete(id);
+        await db.delete(rules).where(eq(rules.id, id));
     },
 
-    async getAll(): Promise<SpendRule[]> {
-        const rows = await db.rules.orderBy("priority").toArray();
-        return rows.map((r) => ({
-            ...r,
-            conditions: JSON.parse(r.conditions),
-            actions: JSON.parse(r.actions),
-        })) as SpendRule[];
+    async getAll(userId: string): Promise<Rule[]> {
+        return await db.select().from(rules).where(eq(rules.userId, userId));
+    },
+
+    async isOwner(userId: string, ruleId: string): Promise<boolean> {
+        const row = await db.select().from(rules).where(eq(rules.id, ruleId));
+        return !!row.length && row[0].userId === userId;
     },
 };

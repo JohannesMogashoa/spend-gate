@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { auth } from "./auth/auth";
+import { auth } from "./auth";
 
 // Returns session or null — does not redirect
 export const getSession = cache(async () => {

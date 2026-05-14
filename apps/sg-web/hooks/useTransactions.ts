@@ -1,6 +1,6 @@
 "use client";
 
-import { db } from "@/db";
+import { db } from "@/db/dexie";
 import { proxyFetch } from "@/lib/api";
 import { InvestecTransaction } from "@spendgate/rules";
 import { useQuery } from "@tanstack/react-query";

@@ -1,6 +1,7 @@
+import { Rule } from "@/db/schema";
+import { getSession } from "@/lib/auth/dal";
+import { ruleService } from "@/lib/services/rule.service";
 import { NextRequest, NextResponse } from "next/server";
-
-import { prisma } from "@/lib/prisma";
 
 const DEPLOY_RETRY_MAX = 2;
 
@@ -41,32 +42,31 @@ async function triggerRedeploy(
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
         const { id } = await params;
-        const body = await req.json();
-        const cardKey = req.headers.get("x-card-key");
+        const body: Rule = await req.json();
 
-        const rule = await prisma.spendRule.update({
-            where: { id },
-            data: {
-                ...(body.label !== undefined && { label: body.label }),
-                ...(body.active !== undefined && { active: body.active }),
-                ...(body.priority !== undefined && { priority: body.priority }),
-                ...(body.stopProcessing !== undefined && {
-                    stopProcessing: body.stopProcessing,
-                }),
-                ...(body.conditions !== undefined && {
-                    conditions: body.conditions,
-                }),
-                ...(body.actions !== undefined && { actions: body.actions }),
-            },
-        });
+        if (id !== body.id) {
+            return NextResponse.json({ error: "ID mismatch" }, { status: 400 });
+        }
+
+        if (!(await ruleService.isOwner(session.user.id, id))) {
+            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
+
+        await ruleService.update(body);
+
+        const cardKey = req.headers.get("x-card-key");
 
         // Trigger redeploy if card key provided
         if (cardKey?.trim()) {
             await triggerRedeploy(cardKey.trim());
         }
 
-        return NextResponse.json(rule);
+        return NextResponse.json({ status: 200 });
     } catch {
         return NextResponse.json({ error: "Failed to update rule" }, { status: 500 });
     }
@@ -74,10 +74,18 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
         const { id } = await params;
         const cardKey = _req.headers.get("x-card-key");
 
-        await prisma.spendRule.delete({ where: { id } });
+        if (!(await ruleService.isOwner(session.user.id, id))) {
+            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
+
+        await ruleService.delete(id);
 
         // Trigger redeploy if card key provided
         if (cardKey?.trim()) {

@@ -1,29 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import { RuleAction, RuleCondition, SpendRule } from "@/lib/types";
-
-import { compileRules } from "@/lib/compiler";
+import { Rule } from "@/db/schema";
+import { getSession } from "@/lib/auth/dal";
 import { deployRulesToCard } from "@/lib/cardDeployer";
-import { prisma } from "@/lib/prisma";
+import { ruleService } from "@/lib/services/rule.service";
+import { RuleCondition, SpendRule } from "@/lib/types";
+import { compileRules } from "@spendgate/rules";
+import { NextRequest, NextResponse } from "next/server";
 
-type RuleRow = {
-    id: string;
-    label: string;
-    active: boolean;
-    priority: number;
-    stopProcessing: boolean;
-    conditions: unknown;
-    actions: unknown;
-};
-
-function toSpendRule(row: RuleRow): SpendRule {
+function toSpendRule(row: Rule): SpendRule {
     return {
         id: row.id,
         label: row.label,
         active: row.active,
         priority: row.priority,
-        stopProcessing: row.stopProcessing,
         conditions: row.conditions as RuleCondition[],
-        actions: row.actions as RuleAction[],
+        actions: [],
     };
 }
 
@@ -34,6 +24,10 @@ function toSpendRule(row: RuleRow): SpendRule {
  */
 export async function POST(req: NextRequest) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
         const body = (await req.json().catch(() => ({}))) as {
             cardKey?: string;
         };
@@ -44,14 +38,9 @@ export async function POST(req: NextRequest) {
         }
 
         // Load all active rules from DB, sorted by priority
-        const rules = (
-            await prisma.spendRule.findMany({
-                where: { active: true },
-                orderBy: { priority: "asc" },
-            })
-        ).map(toSpendRule);
+        const rules = (await ruleService.getAll(session.user.id)).map(toSpendRule);
 
-        const compiledCode = compileRules(rules);
+        const compiledCode = compileRules(process.env.NEXT_PUBLIC_APP_URL as string, rules);
         const result = await deployRulesToCard(cardKey, compiledCode);
 
         return NextResponse.json(

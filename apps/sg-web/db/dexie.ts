@@ -56,4 +56,4 @@ class SpendGateDB extends Dexie {
     }
 }
 
-export const db = new SpendGateDB();
+export const indexDb = new SpendGateDB();

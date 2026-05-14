@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { SpendRule } from "@/lib/types";
-import { prisma } from "@/lib/prisma";
+import { CreateRule, insertRuleSchema } from "@/db/schema";
+import { getSession } from "@/lib/auth/dal";
+import { ruleService } from "@/lib/services/rule.service";
 
 const DEPLOY_RETRY_MAX = 2;
 
@@ -40,9 +41,11 @@ async function triggerRedeploy(
 
 export async function GET() {
     try {
-        const rules = await prisma.spendRule.findMany({
-            orderBy: { priority: "asc" },
-        });
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        const rules = await ruleService.getAll(session.user.id);
         return NextResponse.json(rules);
     } catch {
         return NextResponse.json({ error: "Failed to fetch rules" }, { status: 500 });
@@ -51,23 +54,24 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
-        const body: Omit<SpendRule, "id"> = await req.json();
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        const body: CreateRule = await req.json();
         const cardKey = req.headers.get("x-card-key");
 
-        if (!body.label || !Array.isArray(body.conditions) || !Array.isArray(body.actions)) {
+        const output = await insertRuleSchema.safeParseAsync({
+            ...body,
+            userId: session.user.id,
+        });
+
+        if (!output.success) {
+            console.error("Validation error:", output.error);
             return NextResponse.json({ error: "Invalid rule payload" }, { status: 400 });
         }
 
-        const rule = await prisma.spendRule.create({
-            data: {
-                label: body.label,
-                active: body.active ?? true,
-                priority: body.priority ?? 0,
-                stopProcessing: body.stopProcessing ?? false,
-                conditions: body.conditions,
-                actions: body.actions,
-            },
-        });
+        await ruleService.create(output.data);
 
         const baseUrl = req.nextUrl.origin;
 
@@ -76,7 +80,7 @@ export async function POST(req: NextRequest) {
             await triggerRedeploy(cardKey.trim(), baseUrl);
         }
 
-        return NextResponse.json(rule, { status: 201 });
+        return NextResponse.json({ status: 201 });
     } catch {
         return NextResponse.json({ error: "Failed to create rule" }, { status: 500 });
     }
