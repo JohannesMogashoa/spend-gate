@@ -6,7 +6,7 @@
 
 ## Design Philosophy
 
-SpendGate is a fintech application for tech-savvy financial professionals. The design should convey:
+SpendGate is a fintech application for tech-savvy financial c professionals. The design should convey:
 
 - **Trust & Security**: Banking-grade professionalism with a modern edge
 - **Clarity**: Data-dense interfaces that remain scannable and approachable
