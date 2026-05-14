@@ -1,11 +1,5 @@
+import type { InvestecCredentials } from "@spendgate/investec";
 import { NextRequest } from "next/server";
-
-export type InvestecCredentials = {
-    clientId: string;
-    clientSecret: string;
-    apiKey: string;
-    cardKey?: string;
-};
 
 export function extractCredentials(request: NextRequest): InvestecCredentials {
     const clientId = request.headers.get("x-investec-client-id");

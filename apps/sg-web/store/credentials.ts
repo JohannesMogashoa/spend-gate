@@ -1,6 +1,6 @@
 "use client";
 
-import { sessionCredentials, type Credentials } from "@/lib/session-credentials";
+import { sessionCredentials, type Credentials } from "@/lib/services/credential.service";
 import { create } from "zustand";
 
 type CredentialsStore = {

@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
 
-import z from "zod";
-import { extractCredentials } from "@/lib/credentials";
 import { corsJson } from "@/lib/cors";
 import { investecFetch } from "@/lib/investec-client";
+import { extractCredentials } from "@/lib/investec/credentials";
+import z from "zod";
 
 const simulateSchema = z.object({
     compiledCode: z.string(),

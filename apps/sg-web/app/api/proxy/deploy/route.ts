@@ -1,7 +1,7 @@
-import { NextRequest } from "next/server";
-import { extractCredentials, MissingCredentialsError } from "@/lib/credentials";
-import { investecFetch } from "@/lib/investec-client";
 import { corsJson, handleOptions } from "@/lib/cors";
+import { investecFetch } from "@/lib/investec-client";
+import { extractCredentials, MissingCredentialsError } from "@/lib/investec/credentials";
+import { NextRequest } from "next/server";
 import z from "zod";
 
 const deploySchema = z.object({

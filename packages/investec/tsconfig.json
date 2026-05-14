@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "module": "preserve",
+        "outDir": "dist",
+        "rootDir": "src",
+        "declaration": true,
+        "declarationMap": true
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "dist"]
+}

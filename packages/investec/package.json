@@ -1,0 +1,27 @@
+{
+    "name": "@spendgate/investec",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc --watch",
+        "lint": "eslint src/**/*.ts",
+        "format": "prettier --write src/**/*.ts",
+        "format:check": "prettier --check src/**/*.ts"
+    },
+    "devDependencies": {
+        "@types/node": "^20.19.39",
+        "eslint": "^9",
+        "prettier": "^3.8.3",
+        "typescript": "^5"
+    }
+}

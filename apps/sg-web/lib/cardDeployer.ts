@@ -1,44 +1,10 @@
+import { readErrorText } from "./error";
+import { getAccessToken } from "./investec/get-token";
+
 const BASE =
     process.env.USE_SANDBOX === "true"
         ? "https://openapisandbox.investec.com/za/v1"
         : "https://openapi.investec.com/za/v1";
-
-async function readErrorText(res: Response): Promise<string> {
-    try {
-        const text = await res.text();
-        return text || `${res.status} ${res.statusText}`;
-    } catch {
-        return `${res.status} ${res.statusText}`;
-    }
-}
-
-async function getAccessToken(): Promise<string> {
-    if (!process.env.INVESTEC_CLIENT_ID || !process.env.INVESTEC_CLIENT_SECRET) {
-        throw new Error("Missing Investec OAuth credentials");
-    }
-
-    const res = await fetch("https://identity.investec.com/am/oauth2/za/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-            grant_type: "client_credentials",
-            client_id: process.env.INVESTEC_CLIENT_ID!,
-            client_secret: process.env.INVESTEC_CLIENT_SECRET!,
-            scope: "cards",
-        }),
-    });
-
-    if (!res.ok) {
-        throw new Error(`Token fetch failed: ${await readErrorText(res)}`);
-    }
-
-    const { access_token } = (await res.json()) as { access_token?: string };
-    if (!access_token) {
-        throw new Error("Token fetch failed: missing access token");
-    }
-
-    return access_token;
-}
 
 export async function deployRulesToCard(
     cardKey: string,
@@ -50,7 +16,15 @@ export async function deployRulesToCard(
 
     let token: string;
     try {
-        token = await getAccessToken();
+        token = await getAccessToken(
+            {
+                clientId: process.env.INVESTEC_CLIENT_ID!,
+                clientSecret: process.env.INVESTEC_CLIENT_SECRET!,
+                apiKey: process.env.INVESTEC_API_KEY!,
+                cardKey: cardKey,
+            },
+            process.env.USE_SANDBOX === "true"
+        );
     } catch (error) {
         return {
             success: false,

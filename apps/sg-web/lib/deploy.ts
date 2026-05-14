@@ -1,7 +1,7 @@
 "use client";
 
 import { proxyFetch } from "@/lib/api";
-import { ruleService } from "@/lib/rule-service";
+import { ruleService } from "@/lib/services/rule.service";
 import { compileRules } from "@spendgate/rules";
 
 export type DeployResult = {

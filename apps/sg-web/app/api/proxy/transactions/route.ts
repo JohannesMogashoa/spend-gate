@@ -1,7 +1,7 @@
-import { NextRequest } from "next/server";
-import { investecFetch } from "@/lib/investec-client";
-import { extractCredentials } from "@/lib/credentials";
 import { corsJson } from "@/lib/cors";
+import { investecFetch } from "@/lib/investec-client";
+import { extractCredentials } from "@/lib/investec/credentials";
+import { NextRequest } from "next/server";
 
 /**
  * GET /api/transactions

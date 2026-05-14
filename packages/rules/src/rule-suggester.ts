@@ -3,7 +3,8 @@
  * Uses deterministic logic (no LLM) for fast, explainable suggestions.
  */
 
-import type { SpendRule, InvestecTransaction } from "./types";
+import { InvestecTransaction } from "@spendgate/investec";
+import { SpendRule } from "./types";
 
 export type RuleSuggestion = Omit<SpendRule, "id" | "active" | "priority" | "stopProcessing"> & {
     label: string;

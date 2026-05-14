@@ -1,7 +1,7 @@
 "use client";
 
 import { proxyFetch } from "@/lib/api";
-import type { Credentials } from "@/lib/session-credentials";
+import type { Credentials } from "@/lib/services/credential.service";
 import { useCredentialsStore } from "@/store/credentials";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

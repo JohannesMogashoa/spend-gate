@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { MissingCredentialsError } from "./credentials";
 import { corsJson } from "./cors";
+import { MissingCredentialsError } from "./investec/credentials";
 
 type Handler = (req: NextRequest) => Promise<Response>;
 
