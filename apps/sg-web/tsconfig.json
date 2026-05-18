@@ -29,7 +29,8 @@
         ".next/types/**/*.ts",
         ".next/dev/types/**/*.ts",
         "**/*.mts",
-        "../../packages/rules/src/rule-suggester.ts"
+        "../../packages/rules/src/rule-suggester.ts",
+        "app/onboarding"
     ],
     "exclude": ["node_modules"]
 }

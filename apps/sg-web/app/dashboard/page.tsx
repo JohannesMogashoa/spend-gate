@@ -6,7 +6,7 @@ import { eq, sum } from "drizzle-orm";
 
 export default async function DashboardPage() {
     const session = await requireSession();
-    const userId = session.user.userId;
+    const userId = session.user.id;
 
     const [userRules, [savedResult]] = await Promise.all([
         db
