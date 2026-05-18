@@ -6,13 +6,14 @@
         "apps/*",
         "packages/*"
     ],
-    "packageManager": "pnpm@10.32.1",
+    "packageManager": "npm@11.13.0",
     "scripts": {
-        "preinstall": "npx only-allow pnpm",
         "dev": "turbo run dev --parallel",
-        "dev:api": "turbo run dev --filter=@spendgate/api",
         "dev:mobile": "turbo run dev --filter=@spendgate/mobile",
         "dev:web": "turbo run dev --filter=@spendgate/web",
+        "dev:investec": "turbo run dev --filter=@spendgate/investec",
+        "dev:rules": "turbo run dev --filter=@spendgate/rules",
+        "dev:pkg": "turbo run dev --filter=@spendgate/investec --filter=@spendgate/rules",
         "build": "turbo run build",
         "build:api": "turbo run build --filter=@spendgate/api",
         "build:mobile": "turbo run build --filter=@spendgate/mobile",

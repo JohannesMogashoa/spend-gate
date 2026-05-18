@@ -19,7 +19,7 @@
         "format:check": "prettier --check src/**/*.ts"
     },
     "dependencies": {
-        "@spendgate/investec": "workspace:*"
+        "@spendgate/investec": "*"
     },
     "devDependencies": {
         "@types/node": "^20.19.39",

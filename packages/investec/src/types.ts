@@ -18,3 +18,12 @@ export type InvestecTransaction = {
     amount: number; // in rands (positive for debits, negative for credits)
     runningBalance: number;
 };
+
+export type Credentials = {
+    clientId: string;
+    clientSecret: string;
+    apiKey: string;
+    cardKey: string;
+    sandbox: boolean;
+    accountId: string;
+};

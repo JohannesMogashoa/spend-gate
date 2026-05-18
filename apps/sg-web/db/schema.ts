@@ -60,6 +60,7 @@ export const userCredentials = pgTable(
         clientSecret: text("client_secret").notNull(), // encrypted
         apiKey: text("api_key").notNull(), // encrypted
         cardKey: text("card_key").notNull(), // encrypted
+        accountId: text("account_id").notNull(), // encrypted
         sandbox: boolean("sandbox").notNull().default(false),
         createdAt: timestamp("created_at").notNull().defaultNow(),
         updatedAt: timestamp("updated_at").notNull().defaultNow(),

@@ -1,17 +1,10 @@
 "use client";
 
 import { proxyFetch } from "@/lib/api";
-import type { Credentials } from "@/lib/services/credential.service";
 import { useCredentialsStore } from "@/store/credentials";
+import { Credentials, SANDBOX_DEFAULTS } from "@spendgate/investec";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-// Public sandbox credentials from the Investec Developer Community Wiki
-const SANDBOX_DEFAULTS: Omit<Credentials, "cardKey" | "sandbox"> = {
-    clientId: "yAxzSAy2m7ZWMwrT7JMNGRfVKxXIhIoU",
-    clientSecret: "EkiPvonrLwrRFVHXMmHLmDYbIPLQQhQV",
-    apiKey: "", // User must supply — not publicly shareable
-};
 
 export default function OnboardingForm() {
     const [form, setForm] = useState<Credentials>({
@@ -19,6 +12,7 @@ export default function OnboardingForm() {
         clientSecret: "",
         apiKey: "",
         cardKey: "",
+        accountId: "",
         sandbox: false,
     });
     const [loading, setLoading] = useState(false);

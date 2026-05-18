@@ -1,15 +1,8 @@
 import { db } from "@/db/client";
 import { userCredentials } from "@/db/schema";
+import { Credentials } from "@spendgate/investec";
 import { eq } from "drizzle-orm";
 import { decrypt, encrypt } from "../crypto";
-
-export type Credentials = {
-    clientId: string;
-    clientSecret: string;
-    apiKey: string;
-    cardKey: string;
-    sandbox: boolean;
-};
 
 export const credentialService = {
     async save(userId: string, creds: Credentials): Promise<void> {
@@ -19,6 +12,7 @@ export const credentialService = {
             clientSecret: encrypt(creds.clientSecret),
             apiKey: encrypt(creds.apiKey),
             cardKey: encrypt(creds.cardKey),
+            accountId: encrypt(creds.accountId),
             sandbox: creds.sandbox,
             updatedAt: new Date(),
         };
@@ -40,6 +34,7 @@ export const credentialService = {
             clientSecret: decrypt(cred.clientSecret),
             apiKey: decrypt(cred.apiKey),
             cardKey: decrypt(cred.cardKey),
+            accountId: decrypt(cred.accountId),
             sandbox: cred.sandbox,
         };
     },
