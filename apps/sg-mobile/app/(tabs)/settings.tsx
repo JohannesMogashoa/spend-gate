@@ -1,11 +1,13 @@
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 const SettingsScreen = () => {
     return (
-        <View>
-            <Text>SettingsScreen</Text>
-        </View>
+        <ThemedView>
+            <ThemedText>SettingsScreen</ThemedText>
+        </ThemedView>
     );
 };
 

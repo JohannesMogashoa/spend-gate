@@ -1,7 +1,7 @@
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { Colors } from "@/lib/theme";
 import { Tabs } from "expo-router";
 import React from "react";
 
@@ -17,7 +17,7 @@ export default function TabLayout() {
             }}
         >
             <Tabs.Screen
-                name="index"
+                name="Rules"
                 options={{
                     title: "Rules",
                     tabBarIcon: ({ color }) => (
@@ -26,7 +26,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="explore"
+                name="History"
                 options={{
                     title: "History",
                     tabBarIcon: ({ color }) => (
@@ -35,7 +35,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="explore"
+                name="Settings"
                 options={{
                     title: "Settings",
                     tabBarIcon: ({ color }) => (

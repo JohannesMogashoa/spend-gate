@@ -1,14 +1,15 @@
-import { Text } from "@/components/ui/text";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { ScrollView, StyleSheet } from "react-native";
 
 export default function HomeScreen() {
     const name = "Johannes";
     return (
-        <ScrollView contentContainerClassName="p-6 native:pb-safe">
-            <View>
-                <Text variant={"h2"}>SpendGate</Text>
+        <ScrollView>
+            <ThemedView>
+                <ThemedText>SpendGate</ThemedText>
                 {/* Add Button */}
-            </View>
+            </ThemedView>
             {/* Stat Cards */}
             {/* Active Rules */}
             {/* Paused Rules */}

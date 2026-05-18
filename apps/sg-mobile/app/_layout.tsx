@@ -1,5 +1,4 @@
 import "react-native-reanimated";
-import "../global.css";
 
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -8,7 +7,6 @@ import { useEffect, useState } from "react";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useAuthStore } from "@/store/auth";
-import { PortalHost } from "@rn-primitives/portal";
 import { StatusBar } from "expo-status-bar";
 
 export const unstable_settings = {
@@ -61,7 +59,6 @@ export default function RootLayout() {
             <QueryClientProvider client={queryClient}>
                 <OnboardingGuard />
                 <StatusBar style="auto" />
-                <PortalHost />
             </QueryClientProvider>
         </ThemeProvider>
     );

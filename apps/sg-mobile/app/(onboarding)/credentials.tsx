@@ -1,4 +1,4 @@
-import { Text } from "@/components/ui/text";
+import { ThemedText } from "@/components/themed-text";
 import { useAuthStore } from "@/store/auth";
 import { Credentials } from "@spendgate/investec";
 import { useRouter } from "expo-router";
@@ -29,9 +29,11 @@ const CredentialsScreen = () => {
         }
     }
     return (
-        <ScrollView contentContainerClassName="p-6 native:pb-safe">
-            <Text>SpendGate Programmable card rules</Text>
-            <Text>Your credentials stay on your device. We do not store on a server.</Text>
+        <ScrollView>
+            <ThemedText>SpendGate Programmable card rules</ThemedText>
+            <ThemedText>
+                Your credentials stay on your device. We do not store on a server.
+            </ThemedText>
         </ScrollView>
     );
 };
