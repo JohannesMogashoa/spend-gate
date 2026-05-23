@@ -1,25 +1,70 @@
 "use client";
 import React from "react";
-import { useRules } from "@/hooks/useRules";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
+import { useSession, signOut } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button";
 
 const Header = () => {
-    const { rules } = useRules();
-    const router = useRouter();
-    return (
-        <header className="border-b border-slate-200 bg-white shadow-sm">
-            <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between gap-3">
-                <div onClick={() => router.push("/")} className="cursor-pointer">
-                    <h1 className="text-xl font-bold text-slate-900 tracking-tight">SpendGate</h1>
-                    <p className="text-xs text-slate-500">Investec Programmable Card Rule Engine</p>
-                </div>
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
-                    {rules.filter((r) => r.active).length} active rule
-                    {rules.filter((r) => r.active).length !== 1 ? "s" : ""}
-                </span>
-            </div>
-        </header>
-    );
+  const router = useRouter();
+  const pathname = usePathname();
+  const { data: session, isPending } = useSession();
+
+  // Don't show header on auth pages
+  if (pathname === "/sign-in" || pathname === "/sign-up") {
+    return null;
+  }
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+  };
+
+  return (
+    <header className="border-b border-border bg-card">
+      <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between gap-4">
+        <Link href="/" className="cursor-pointer">
+          <h1 className="text-xl font-semibold text-foreground tracking-tight">
+            SpendGate
+          </h1>
+          <p className="text-xs text-muted-foreground">
+            Programmable Card Rules
+          </p>
+        </Link>
+
+        <nav className="flex items-center gap-3">
+          {isPending ? (
+            <div className="h-8 w-20 animate-pulse rounded bg-muted" />
+          ) : session?.user ? (
+            <>
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm">
+                  Dashboard
+                </Button>
+              </Link>
+              <span className="text-xs text-muted-foreground">
+                {session.user.email}
+              </span>
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                Sign out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/sign-in">
+                <Button variant="ghost" size="sm">
+                  Sign in
+                </Button>
+              </Link>
+              <Link href="/sign-up">
+                <Button size="sm">Get started</Button>
+              </Link>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
+  );
 };
 
 export default Header;

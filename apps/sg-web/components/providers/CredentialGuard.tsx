@@ -20,10 +20,12 @@ export function CredentialGuard({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         if (!isMounted) return;
-        const onOnboarding = pathname === "/onboarding";
-        if (!credentials && !onOnboarding) {
+        const publicPaths = ["/onboarding", "/sign-in", "/sign-up", "/"];
+        const isPublicPath = publicPaths.includes(pathname);
+        
+        if (!credentials && !isPublicPath) {
             router.replace("/onboarding");
-        } else if (credentials && onOnboarding) {
+        } else if (credentials && pathname === "/onboarding") {
             router.replace("/dashboard");
         }
     }, [credentials, pathname, router]);
